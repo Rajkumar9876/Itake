@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Saver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 100%;
+            height: 100%;
+            background-color: green;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        output {
+            margin-bottom: 10px;
+            width: 98%;
+            padding: 8px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 2em;
+            color: red;
+            white-space: nowrap;
+            transform-style: preserve-3d;
+            animation: rotateText 5s linear infinite;
+        }
+
+        input, button {
+            margin-bottom: 10px;
+            width: 70%;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 100%;
+            font-weight: bold;
+        }
+
+        input {
+            background-color: black;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+
+        button {
+            background-color: red;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+
+        #timer {
+            font-size: 1.5em;
+        }
+
+        @keyframes rotateText {
+            0% {
+                transform: rotateY(0deg);
+            }
+            25% {
+                transform: rotateY(90deg);
+            }
+            50% {
+                transform: rotateX(45deg);
+            }
+            75% {
+                transform: rotateY(-90deg);
+            }
+            100% {
+                transform: rotateY(0deg);
+            }
+        }
+       
+      
+     
+    
+    </style>
+</head>
+<body>
+
+<div id="div1">
+    <output id="outputValue"></output>
+    <p>की तरफ से</p>
+    <p>wishing you</p>
+  
+ 
+  
+  
+    <p>happy new year 2024</p>
+    <div id="timer">00d 00h 00m 00s</div>
+
+    <input type="text" required id="inputValue" placeholder="Write Your Name">
+
+    <button onclick="saveValue(); sharePage()">Share</button>
+</div>
+
+<script>
+    function saveValue() {
+        const inputValue = document.getElementById("inputValue").value;
+        localStorage.setItem("savedValue", inputValue);
+        displaySavedValue();
+    }
+
+    function displaySavedValue() {
+        const savedValue = localStorage.getItem("savedValue");
+        const outputValue = document.getElementById("outputValue");
+        outputValue.textContent = savedValue || "Write Your Name ?";
+    }
+
+    displaySavedValue();
+
+    document.getElementById('inputValue').addEventListener('input', function () {
+        document.getElementById('outputValue').textContent = this.value;
+    });
+
+    function sharePage() {
+        var currentPageUrl = window.location.href;
+
+        if (navigator.share) {
+            navigator.share({
+                title: document.title,
+                url: currentPageUrl
+            })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.error('Error sharing:', error));
+        } else {
+            alert('Copy the URL below to share:\n\n' + currentPageUrl);
+        }
+    }
+
+    var targetDate = new Date('2024-01-01T00:00:00').getTime();
+
+    function updateTimer() {
+        var currentDate = new Date().getTime();
+        var timeDifference = targetDate - currentDate;
+
+        if (timeDifference > 0) {
+            var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById("timer").innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+        } else {
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Time's up!";
+        }
+    }
+
+    var timerInterval = setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>
